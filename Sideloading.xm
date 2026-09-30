@@ -10,7 +10,12 @@
 #define YT_NAME @"YouTube Music"
 #define YTMULoginAlert @"YTMULoginAlert"
 
+// Forward declarations to prevent compiler build errors
 @interface SSOConfiguration : NSObject
+@end
+
+@interface SSOSafariSignIn : NSObject
+- (void)signInWithURL:(id)arg1 presentationAnchor:(id)arg2 completionHandler:(id)arg3;
 @end
 
 static NSString *accessGroupID() {
