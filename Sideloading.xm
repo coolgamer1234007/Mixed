@@ -2,21 +2,33 @@
 #import <Foundation/Foundation.h>
 #import <dlfcn.h>
 #import <rootless.h>
-#import "Source/Headers/YTAlertView.h"
-#import "Source/Headers/Localization.h"
 
 #define YT_BUNDLE_ID @"com.google.ios.youtubemusic"
 #define YT_BUNDLE_NAME @"YouTubeMusic"
 #define YT_NAME @"YouTube Music"
 #define YTMULoginAlert @"YTMULoginAlert"
 
-// Forward declarations to prevent compiler build errors
+// Explicit class declarations for Clang compiler
 @interface SSOConfiguration : NSObject
+- (void)setValue:(id)value forKey:(NSString *)key;
+- (BOOL)shouldEnableSafariSignIn;
+- (BOOL)temporarilyDisableSafariSignIn;
+- (void)setTemporarilyDisableSafariSignIn:(BOOL)arg1;
+- (id)initWithClientID:(id)clientID supportedAccountServices:(id)supportedAccountServices;
 @end
 
 @interface SSOSafariSignIn : NSObject
 - (void)signInWithURL:(id)arg1 presentationAnchor:(id)arg2 completionHandler:(id)arg3;
 @end
+
+@interface YTAlertView : UIView
++ (instancetype)infoDialog;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *subtitle;
+- (void)show;
+@end
+
+FOUNDATION_EXPORT NSString *LOC(NSString *key);
 
 static NSString *accessGroupID() {
     NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -66,7 +78,7 @@ static NSString *accessGroupID() {
 %hook SSOConfiguration
 - (BOOL)shouldEnableSafariSignIn { return YES; }
 - (BOOL)temporarilyDisableSafariSignIn { return NO; }
-- (void)setTemporarilyDisableSafariSignIn:(BOOL)arg1 { return %orig(NO); }
+- (void)setTemporarilyDisableSafariSignIn:(BOOL)arg1 { %orig(NO); }
 
 - (id)initWithClientID:(id)clientID supportedAccountServices:(id)supportedAccountServices {
     self = %orig;
